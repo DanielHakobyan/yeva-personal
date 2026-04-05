@@ -40,17 +40,18 @@ const Essays = () => {
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.5 }}
-      className="max-w-5xl mx-auto px-6 py-12"
+      className="max-w-5xl mx-auto px-4 sm:px-6 py-8 sm:py-12 w-full min-w-0"
     >
-      <h1 className="text-4xl md:text-6xl font-display font-bold mb-12 tracking-tight">Writing</h1>
+      <h1 className="text-3xl sm:text-4xl md:text-6xl font-display font-bold mb-8 sm:mb-12 tracking-tight">Writing</h1>
       
       {/* Category Tabs */}
-      <div className="flex flex-wrap gap-4 mb-12">
+      <div className="flex gap-2 sm:gap-3 mb-8 sm:mb-12 overflow-x-auto pb-2 -mx-4 px-4 sm:mx-0 sm:px-0 snap-x snap-mandatory touch-pan-x [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
         {Categories.map(category => (
           <button
             key={category}
+            type="button"
             onClick={() => setActiveCategory(category)}
-            className={`relative px-6 py-2 rounded-full text-sm font-medium tracking-wide transition-colors ${
+            className={`relative shrink-0 snap-start min-h-[44px] px-5 sm:px-6 py-2.5 rounded-full text-sm font-medium tracking-wide transition-colors touch-manipulation ${
               activeCategory === category 
                 ? 'text-white' 
                 : 'text-dark/60 dark:text-light/60 hover:text-dark dark:hover:text-light'
@@ -82,7 +83,7 @@ const Essays = () => {
               exit={{ opacity: 0, scale: 0.95 }}
               transition={{ duration: 0.4, delay: index * 0.05 }}
             >
-              <Link to={`/essays/${essay._id}`} className="block block group glass-card p-8">
+              <Link to={`/essays/${essay._id}`} className="block group glass-card p-5 sm:p-8 rounded-xl sm:rounded-2xl active:opacity-90 touch-manipulation">
                 <div className="flex flex-col md:flex-row md:items-baseline gap-4 mb-4">
                   <span className="text-xs font-bold tracking-widest uppercase text-accent">
                     {essay.category}
@@ -91,7 +92,7 @@ const Essays = () => {
                     {new Date(essay.createdAt).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}
                   </span>
                 </div>
-                <h2 className="text-2xl md:text-3xl font-display font-bold group-hover:text-accent transition-colors">
+                <h2 className="text-xl sm:text-2xl md:text-3xl font-display font-bold group-hover:text-accent transition-colors leading-snug break-words">
                   {essay.title}
                 </h2>
               </Link>

@@ -39,18 +39,18 @@ const ProjectDetail = () => {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="max-w-7xl mx-auto px-6 py-12"
+      className="max-w-7xl mx-auto px-4 sm:px-6 py-8 sm:py-12 w-full min-w-0"
     >
-      <Link to="/portfolio" className="inline-flex items-center gap-2 text-sm uppercase tracking-widest opacity-60 hover:opacity-100 hover:text-accent transition-all mb-12">
+      <Link to="/portfolio" className="inline-flex items-center gap-2 min-h-[44px] text-sm uppercase tracking-widest opacity-60 hover:opacity-100 hover:text-accent transition-all mb-8 sm:mb-12 touch-manipulation">
         <ArrowLeft size={16} /> Back to Studio
       </Link>
       
-      <div className="grid lg:grid-cols-12 gap-12">
-        <div className="lg:col-span-4 flex flex-col gap-8">
+      <div className="grid lg:grid-cols-12 gap-8 lg:gap-12">
+        <div className="lg:col-span-4 flex flex-col gap-6 sm:gap-8 min-w-0">
           <motion.h1 
             initial={{ y: 20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
-            className="text-4xl md:text-5xl font-display font-bold"
+            className="text-3xl sm:text-4xl md:text-5xl font-display font-bold break-words"
           >
             {project.title}
           </motion.h1>
@@ -58,7 +58,7 @@ const ProjectDetail = () => {
             initial={{ y: 20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ delay: 0.1 }}
-            className="text-lg opacity-80 font-light leading-relaxed whitespace-pre-wrap"
+            className="text-base sm:text-lg opacity-80 font-light leading-relaxed whitespace-pre-wrap break-words"
           >
             {project.description}
           </motion.div>
@@ -80,7 +80,7 @@ const ProjectDetail = () => {
           )}
         </div>
         
-        <div className="lg:col-span-8 space-y-12">
+        <div className="lg:col-span-8 space-y-8 sm:space-y-12 min-w-0">
           {project.images && project.images.map((img, index) => (
             <motion.div
               key={index}
@@ -90,7 +90,7 @@ const ProjectDetail = () => {
               transition={{ duration: 0.8 }}
               className="rounded-xl overflow-hidden glass shadow-2xl"
             >
-              <img src={img.startsWith('http') ? img : `http://localhost:5000${img}`} alt={`${project.title} screenshot ${index + 1}`} className="w-full h-auto" />
+              <img src={img.startsWith('http') ? img : `http://localhost:5000${img}`} alt={`${project.title} screenshot ${index + 1}`} className="w-full max-w-full h-auto object-contain" loading="lazy" />
             </motion.div>
           ))}
         </div>

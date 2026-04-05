@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { useLocation } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 const Home = () => {
   return (
@@ -9,7 +9,7 @@ const Home = () => {
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -20 }}
       transition={{ duration: 0.8, ease: "easeOut" }}
-      className="min-h-[80vh] flex flex-col justify-center items-center px-6 text-center"
+      className="min-h-[70vh] sm:min-h-[80vh] flex flex-col justify-center items-center px-4 sm:px-6 text-center max-w-full"
     >
       <motion.p
         initial={{ opacity: 0, scale: 0.9 }}
@@ -24,7 +24,7 @@ const Home = () => {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.5, duration: 1 }}
-        className="text-5xl md:text-8xl font-display font-bold tracking-tighter mb-8 leading-tight"
+        className="text-[clamp(1.85rem,7vw,2.6rem)] sm:text-5xl md:text-7xl lg:text-8xl font-display font-bold tracking-tight sm:tracking-tighter mb-6 sm:mb-8 leading-[1.08] sm:leading-tight break-words px-1"
       >
         Cinematic <br />
         <span className="text-transparent bg-clip-text bg-gradient-to-r from-gray-400 to-gray-800 dark:from-gray-300 dark:to-white">
@@ -36,7 +36,7 @@ const Home = () => {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.8, duration: 1 }}
-        className="max-w-xl text-lg md:text-xl opacity-70 mb-12 font-light"
+        className="max-w-xl text-base sm:text-lg md:text-xl opacity-70 mb-8 sm:mb-12 font-light px-2 leading-relaxed"
       >
         Welcome to my mind. Explore the intersection of design, code, philosophy, and personal thought.
       </motion.p>
@@ -46,15 +46,15 @@ const Home = () => {
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 1.1, duration: 0.8 }}
       >
-        <a 
-          href="/portfolio" 
-          className="inline-block relative overflow-hidden group px-8 py-4 rounded-full border border-dark/20 dark:border-white/20 hover:border-transparent transition-all duration-300"
+        <Link 
+          to="/portfolio" 
+          className="inline-flex items-center justify-center min-h-[48px] min-w-[200px] sm:min-w-0 touch-manipulation relative overflow-hidden group px-8 py-3.5 sm:py-4 rounded-full border border-dark/20 dark:border-white/20 hover:border-transparent active:scale-[0.98] transition-all duration-300"
         >
-          <span className="absolute inset-0 w-full h-full bg-accent group-hover:scale-105 transition-transform duration-500 ease-out z-0 opacity-0 group-hover:opacity-100 round-full"></span>
+          <span className="absolute inset-0 w-full h-full bg-accent group-hover:scale-105 transition-transform duration-500 ease-out z-0 opacity-0 group-hover:opacity-100 rounded-full" />
           <span className="relative z-10 uppercase tracking-widest text-sm font-medium group-hover:text-white transition-colors duration-300">
             Enter Studio
           </span>
-        </a>
+        </Link>
       </motion.div>
     </motion.div>
   );

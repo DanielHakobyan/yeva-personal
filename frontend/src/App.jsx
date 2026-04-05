@@ -51,7 +51,7 @@ function AppShell() {
         style={{ pointerEvents: blockSiteChrome ? 'none' : 'auto' }}
       >
         <Navbar />
-        <main className="flex-grow pt-24 pb-12">
+        <main className="flex-grow w-full min-w-0 pt-24 sm:pt-28 pb-10 sm:pb-14 safe-px safe-pb">
           <AnimatedRoutes />
         </main>
       </motion.div>

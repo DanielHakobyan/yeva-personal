@@ -35,9 +35,9 @@ const EssayDetail = () => {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="max-w-3xl mx-auto px-6 py-12"
+      className="max-w-3xl mx-auto px-4 sm:px-6 py-8 sm:py-12 w-full min-w-0"
     >
-      <Link to="/essays" className="inline-flex items-center gap-2 text-sm uppercase tracking-widest opacity-60 hover:opacity-100 hover:text-accent transition-all mb-12">
+      <Link to="/essays" className="inline-flex items-center gap-2 min-h-[44px] text-sm uppercase tracking-widest opacity-60 hover:opacity-100 hover:text-accent transition-all mb-8 sm:mb-12 touch-manipulation">
         <ArrowLeft size={16} /> Back to Writings
       </Link>
       
@@ -55,13 +55,13 @@ const EssayDetail = () => {
           </span>
         </div>
         
-        <h1 className="text-4xl md:text-5xl lg:text-6xl font-display font-bold mb-12 leading-tight">
+        <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-display font-bold mb-8 sm:mb-12 leading-tight break-words">
           {essay.title}
         </h1>
         
-        <div className="prose dark:prose-invert prose-lg max-w-none font-serif opacity-90">
+        <div className="prose dark:prose-invert prose-sm sm:prose-lg max-w-none font-serif opacity-90">
           {/* For simplicity we use whitespace-pre-wrap, ideally a markdown renderer here */}
-          <div className="whitespace-pre-wrap leading-relaxed">
+          <div className="whitespace-pre-wrap leading-relaxed text-base sm:text-lg">
             {essay.content}
           </div>
         </div>

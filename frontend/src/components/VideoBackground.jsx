@@ -169,7 +169,7 @@ const VideoBackground = () => {
             {showTitleBlock && (
               <motion.div
                 key="intro-title"
-                className="pointer-events-none absolute top-[18%] sm:top-[20%] left-0 right-0 flex justify-center px-5 sm:px-8"
+                className="pointer-events-none absolute top-[16%] sm:top-[20%] left-0 right-0 flex justify-center px-4 sm:px-8"
                 initial={{ opacity: 0, y: 28, scale: 0.96 }}
                 animate={{
                   opacity: 1,
@@ -197,7 +197,7 @@ const VideoBackground = () => {
                     aria-hidden
                   />
                   <p
-                    className="relative font-display text-center font-black text-white leading-[1.06] tracking-[0.05em] sm:tracking-[0.08em] md:tracking-[0.1em] text-4xl sm:text-5xl md:text-6xl lg:text-7xl"
+                    className="relative font-display text-center font-black text-white leading-[1.06] tracking-[0.04em] sm:tracking-[0.08em] md:tracking-[0.1em] text-[clamp(1.5rem,7vw,2.25rem)] sm:text-5xl md:text-6xl lg:text-7xl px-2"
                     aria-live="polite"
                   >
                     {Array.from(titleText).map((char, i) => (
@@ -234,7 +234,7 @@ const VideoBackground = () => {
           </AnimatePresence>
 
           <motion.div
-            className="flex flex-col items-center gap-8 pointer-events-auto mt-auto mb-[12vh]"
+            className="flex flex-col items-center gap-6 sm:gap-8 pointer-events-auto mt-auto w-full max-w-md px-4 safe-pb mb-[max(2.5rem,env(safe-area-inset-bottom,0px))] sm:mb-[12vh]"
             initial={false}
             animate={{
               opacity: controlsVisible ? 1 : 0,
@@ -246,7 +246,7 @@ const VideoBackground = () => {
               <button
                 type="button"
                 onClick={toggleMute}
-                className="bg-white/20 backdrop-blur-md px-6 py-3 rounded-full flex items-center gap-2 text-white border border-white/30 hover:bg-white/30 transition-all font-display tracking-widest text-sm uppercase"
+                className="touch-manipulation min-h-[48px] w-full sm:w-auto justify-center bg-white/20 backdrop-blur-md px-6 py-3.5 rounded-full flex items-center gap-2 text-white border border-white/30 hover:bg-white/30 active:scale-[0.98] transition-all font-display tracking-widest text-xs sm:text-sm uppercase"
               >
                 {isMuted ? <VolumeX size={18} /> : <Volume2 size={18} />}
                 Tap to enable sound
@@ -255,7 +255,7 @@ const VideoBackground = () => {
             <button
               type="button"
               onClick={finishIntro}
-              className="text-white/50 hover:text-white transition-colors tracking-widest text-xs uppercase"
+              className="touch-manipulation min-h-[44px] px-4 text-white/60 hover:text-white active:text-white transition-colors tracking-widest text-xs uppercase"
             >
               Skip Intro
             </button>

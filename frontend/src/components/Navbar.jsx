@@ -21,6 +21,15 @@ const Navbar = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  useEffect(() => {
+    if (!mobileMenuOpen) return undefined;
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.body.style.overflow = prev;
+    };
+  }, [mobileMenuOpen]);
+
   const navLinks = [
     { name: 'About', path: '/about' },
     { name: 'Portfolio', path: '/portfolio' },
@@ -28,8 +37,14 @@ const Navbar = () => {
   ];
 
   return (
-    <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ease-in-out ${scrolled ? 'bg-white/80 dark:bg-black/70 backdrop-blur-md shadow-lg py-3' : 'bg-transparent py-6'}`}>
-      <div className="max-w-7xl mx-auto px-6 lg:px-12 flex justify-between items-center">
+    <header
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ease-in-out safe-px ${
+        scrolled
+          ? 'bg-white/80 dark:bg-black/70 backdrop-blur-md shadow-lg pb-3 pt-[calc(0.5rem+env(safe-area-inset-top,0px))]'
+          : 'bg-transparent pb-4 pt-[calc(0.75rem+env(safe-area-inset-top,0px))] sm:pb-6 sm:pt-[calc(1rem+env(safe-area-inset-top,0px))]'
+      }`}
+    >
+      <div className="max-w-7xl mx-auto flex justify-between items-center gap-3 min-w-0">
         <NavLink
           to="/"
           className={`flex items-center justify-center shrink-0 rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-1 dark:focus-visible:ring-offset-dark ${
@@ -93,7 +108,7 @@ const Navbar = () => {
               <img
                 src={LOGO_URL}
                 alt="YEVA"
-                className={`h-[5rem] w-auto sm:h-[5.5rem] md:h-24 lg:h-[6.25rem] max-w-[min(70vw,320px)] object-contain object-center ${
+                className={`h-12 w-auto sm:h-14 md:h-20 lg:h-[5.25rem] max-w-[min(52vw,240px)] sm:max-w-[min(64vw,300px)] lg:max-w-[320px] object-contain object-center ${
                   scrolled && theme === 'dark' ? 'brightness-0 invert' : ''
                 }`}
                 draggable={false}
@@ -128,8 +143,9 @@ const Navbar = () => {
             </NavLink>
           ))}
           <button 
+            type="button"
             onClick={toggleTheme} 
-            className="p-2 rounded-full hover:bg-black/5 dark:hover:bg-white/10 transition-colors"
+            className="touch-target inline-flex items-center justify-center rounded-full hover:bg-black/5 dark:hover:bg-white/10 transition-colors"
             aria-label="Toggle theme"
           >
             <AnimatePresence mode="wait">
@@ -146,11 +162,22 @@ const Navbar = () => {
           </button>
         </nav>
 
-        <div className="md:hidden flex items-center gap-4">
-          <button onClick={toggleTheme} className="p-2 rounded-full">
-            {theme === 'dark' ? <Moon size={20} /> : <Sun size={20} />}
+        <div className="md:hidden flex items-center gap-1 shrink-0">
+          <button
+            type="button"
+            onClick={toggleTheme}
+            className="touch-target inline-flex items-center justify-center rounded-full hover:bg-black/5 dark:hover:bg-white/10 active:opacity-80"
+            aria-label="Toggle theme"
+          >
+            {theme === 'dark' ? <Moon size={22} /> : <Sun size={22} />}
           </button>
-          <button onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>
+          <button
+            type="button"
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            className="touch-target inline-flex items-center justify-center rounded-full hover:bg-black/5 dark:hover:bg-white/10 active:opacity-80"
+            aria-expanded={mobileMenuOpen}
+            aria-label={mobileMenuOpen ? 'Close menu' : 'Open menu'}
+          >
             {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
           </button>
         </div>
@@ -162,15 +189,17 @@ const Navbar = () => {
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
-            className="md:hidden glass border-t border-white/10"
+            className="md:hidden glass border-t border-white/10 overflow-hidden safe-pb"
           >
-            <nav className="flex flex-col px-6 py-4 space-y-4">
+            <nav className="flex flex-col py-2" aria-label="Mobile">
               {navLinks.map((link) => (
                 <NavLink
                   key={link.name}
                   to={link.path}
                   onClick={() => setMobileMenuOpen(false)}
-                  className={({ isActive }) => `text-lg ${isActive ? 'text-accent font-medium' : 'opacity-80'}`}
+                  className={({ isActive }) =>
+                    `min-h-[48px] flex items-center text-lg px-4 active:bg-black/5 dark:active:bg-white/10 rounded-lg ${isActive ? 'text-accent font-semibold' : 'opacity-90'}`
+                  }
                 >
                   {link.name}
                 </NavLink>
