@@ -1,11 +1,25 @@
 import React, { useRef, useState, useEffect, useCallback } from 'react';
 import { useLocation } from 'react-router-dom';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useTheme } from '../contexts/ThemeContext';
 import { useIntro } from '../contexts/IntroContext';
 import { Volume2, VolumeX } from 'lucide-react';
 
-const CONTROLS_DELAY_MS = 1200;
+const TITLE = 'Quod Tango Muto';
+const TITLE_ENTER_DELAY_MS = 280;
+const TYPE_MS = 72;
+const TITLE_HOLD_MS = 850;
+const TITLE_EXIT_MS = 0.7;
+/** Sound / skip appear after the title has fully left */
+const CONTROLS_AFTER_TITLE_MS = 220;
+
+/**
+ * Direct file URL (not the github.com/.../blob/... page).
+ * Override with VITE_BACKGROUND_VIDEO_URL in .env if you move hosts or branch.
+ */
+const BACKGROUND_VIDEO_URL =
+  import.meta.env.VITE_BACKGROUND_VIDEO_URL ||
+  'https://raw.githubusercontent.com/DanielHakobyan/yeva-personal/master/background-video.mp4';
 
 const VideoBackground = () => {
   const videoRef = useRef(null);
@@ -17,6 +31,9 @@ const VideoBackground = () => {
   const [hasInteracted, setHasInteracted] = useState(false);
   const [settled, setSettled] = useState(() => location.pathname !== '/');
   const [controlsVisible, setControlsVisible] = useState(false);
+  const [titleText, setTitleText] = useState('');
+  const [typingComplete, setTypingComplete] = useState(false);
+  const [showTitleBlock, setShowTitleBlock] = useState(true);
 
   const onHomeIntro = location.pathname === '/' && !settled;
 
@@ -27,13 +44,57 @@ const VideoBackground = () => {
     }
   }, [location.pathname]);
 
+  /** Typewriter → hold → exit; then reveal sound / skip */
   useEffect(() => {
-    if (location.pathname !== '/') {
+    if (location.pathname !== '/' || settled) {
       return undefined;
     }
-    const t = window.setTimeout(() => setControlsVisible(true), CONTROLS_DELAY_MS);
-    return () => window.clearTimeout(t);
-  }, [location.pathname]);
+
+    setTitleText('');
+    setTypingComplete(false);
+    setShowTitleBlock(true);
+    setControlsVisible(false);
+
+    const timers = [];
+    let cancelled = false;
+
+    const chain = () => {
+      timers.push(
+        window.setTimeout(() => {
+          if (cancelled) return;
+          let i = 0;
+          const step = () => {
+            if (cancelled) return;
+            if (i < TITLE.length) {
+              i += 1;
+              setTitleText(TITLE.slice(0, i));
+              timers.push(window.setTimeout(step, TYPE_MS));
+            } else {
+              setTypingComplete(true);
+              timers.push(
+                window.setTimeout(() => {
+                  if (cancelled) return;
+                  setShowTitleBlock(false);
+                }, TITLE_HOLD_MS)
+              );
+            }
+          };
+          step();
+        }, TITLE_ENTER_DELAY_MS)
+      );
+    };
+
+    chain();
+
+    return () => {
+      cancelled = true;
+      timers.forEach(clearTimeout);
+    };
+  }, [location.pathname, settled]);
+
+  const onTitleExitComplete = useCallback(() => {
+    window.setTimeout(() => setControlsVisible(true), CONTROLS_AFTER_TITLE_MS);
+  }, []);
 
   /** Only the home intro should call play(); other routes keep the paused last frame. */
   useEffect(() => {
@@ -52,6 +113,8 @@ const VideoBackground = () => {
       }
       v.pause();
     }
+    setShowTitleBlock(false);
+    setControlsVisible(true);
     setSettled(true);
     setIntroComplete(true);
   }, [setIntroComplete]);
@@ -78,10 +141,11 @@ const VideoBackground = () => {
       <div className="fixed inset-0 w-full h-full z-0 overflow-hidden bg-black">
         <motion.video
           ref={videoRef}
-          src="https://www.w3schools.com/html/mov_bbb.mp4"
+          src={BACKGROUND_VIDEO_URL}
           className="absolute top-1/2 left-1/2 min-w-full min-h-full w-auto h-auto object-cover -translate-x-1/2 -translate-y-1/2"
           muted={isMuted}
           playsInline
+          preload="auto"
           onEnded={handleVideoEnd}
           animate={{
             filter: settled ? 'blur(20px)' : 'blur(0px)',
@@ -100,9 +164,77 @@ const VideoBackground = () => {
       </div>
 
       {onHomeIntro && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center pointer-events-none">
+        <div className="fixed inset-0 z-[100] flex flex-col items-center justify-center pointer-events-none">
+          <AnimatePresence onExitComplete={onTitleExitComplete}>
+            {showTitleBlock && (
+              <motion.div
+                key="intro-title"
+                className="pointer-events-none absolute top-[18%] sm:top-[20%] left-0 right-0 flex justify-center px-5 sm:px-8"
+                initial={{ opacity: 0, y: 28, scale: 0.96 }}
+                animate={{
+                  opacity: 1,
+                  y: 0,
+                  scale: typingComplete ? [1, 1.012, 1] : 1,
+                }}
+                exit={{
+                  opacity: 0,
+                  y: -28,
+                  scale: 1.05,
+                  filter: 'blur(20px)',
+                  transition: { duration: TITLE_EXIT_MS, ease: [0.22, 1, 0.36, 1] },
+                }}
+                transition={{
+                  opacity: { duration: 0.65, ease: [0.22, 1, 0.36, 1] },
+                  y: { duration: 0.75, ease: [0.16, 1, 0.3, 1] },
+                  scale: typingComplete
+                    ? { duration: 3.2, repeat: Infinity, ease: 'easeInOut' }
+                    : { duration: 0.6, ease: [0.22, 1, 0.36, 1] },
+                }}
+              >
+                <div className="relative max-w-[min(92vw,56rem)] [filter:drop-shadow(0_3px_6px_rgba(0,0,0,1))_drop-shadow(0_8px_28px_rgba(0,0,0,0.85))]">
+                  <div
+                    className="pointer-events-none absolute -inset-x-10 -inset-y-8 rounded-[2rem] bg-black/45 blur-2xl sm:blur-3xl"
+                    aria-hidden
+                  />
+                  <p
+                    className="relative font-display text-center font-black text-white leading-[1.06] tracking-[0.05em] sm:tracking-[0.08em] md:tracking-[0.1em] text-4xl sm:text-5xl md:text-6xl lg:text-7xl"
+                    aria-live="polite"
+                  >
+                    {Array.from(titleText).map((char, i) => (
+                      <motion.span
+                        key={i}
+                        initial={{ opacity: 0, y: 14 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{
+                          duration: 0.42,
+                          ease: [0.17, 0.84, 0.44, 1],
+                        }}
+                        className="inline-block text-white [will-change:transform,opacity]"
+                      >
+                        {char === ' ' ? '\u00a0' : char}
+                      </motion.span>
+                    ))}
+                    {!typingComplete && titleText.length > 0 && (
+                      <motion.span
+                        className="inline-block align-middle ml-0.5 h-[0.75em] w-[2px] sm:w-[3px] rounded-full bg-white translate-y-[-0.05em]"
+                        aria-hidden
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: [1, 0.2, 1] }}
+                        transition={{
+                          duration: 0.9,
+                          repeat: Infinity,
+                          ease: 'easeInOut',
+                        }}
+                      />
+                    )}
+                  </p>
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+
           <motion.div
-            className="flex flex-col items-center gap-8 pointer-events-auto"
+            className="flex flex-col items-center gap-8 pointer-events-auto mt-auto mb-[12vh]"
             initial={false}
             animate={{
               opacity: controlsVisible ? 1 : 0,
