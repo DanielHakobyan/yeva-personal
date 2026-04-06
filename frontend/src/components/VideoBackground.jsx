@@ -12,6 +12,7 @@ const TITLE_HOLD_MS = 850;
 const TITLE_EXIT_MS = 0.7;
 /** Sound / skip appear after the title has fully left */
 const CONTROLS_AFTER_TITLE_MS = 220;
+const PRELOADER_BG = '#dcd2c2';
 
 /**
  * Direct file URL (not the github.com/.../blob/... page).
@@ -34,6 +35,7 @@ const VideoBackground = () => {
   const [titleText, setTitleText] = useState('');
   const [typingComplete, setTypingComplete] = useState(false);
   const [showTitleBlock, setShowTitleBlock] = useState(true);
+  const [canPlayVideo, setCanPlayVideo] = useState(() => location.pathname !== '/');
 
   const onHomeIntro = location.pathname === '/' && !settled;
 
@@ -54,6 +56,7 @@ const VideoBackground = () => {
     setTypingComplete(false);
     setShowTitleBlock(true);
     setControlsVisible(false);
+    setCanPlayVideo(false);
 
     const timers = [];
     let cancelled = false;
@@ -93,6 +96,7 @@ const VideoBackground = () => {
   }, [location.pathname, settled]);
 
   const onTitleExitComplete = useCallback(() => {
+    setCanPlayVideo(true);
     window.setTimeout(() => setControlsVisible(true), CONTROLS_AFTER_TITLE_MS);
   }, []);
 
@@ -100,10 +104,10 @@ const VideoBackground = () => {
   useEffect(() => {
     const v = videoRef.current;
     if (!v) return;
-    if (location.pathname === '/' && !settled) {
+    if (location.pathname === '/' && !settled && canPlayVideo) {
       v.play().catch(() => {});
     }
-  }, [location.pathname, settled]);
+  }, [location.pathname, settled, canPlayVideo]);
 
   const finishIntro = useCallback(() => {
     const v = videoRef.current;
@@ -114,6 +118,7 @@ const VideoBackground = () => {
       v.pause();
     }
     setShowTitleBlock(false);
+    setCanPlayVideo(true);
     setControlsVisible(true);
     setSettled(true);
     setIntroComplete(true);
@@ -149,7 +154,7 @@ const VideoBackground = () => {
           onEnded={handleVideoEnd}
           animate={{
             filter: settled ? 'blur(20px)' : 'blur(0px)',
-            opacity: settled ? (theme === 'dark' ? 0.3 : 0.6) : 1,
+            opacity: settled ? (theme === 'dark' ? 0.3 : 0.6) : showTitleBlock ? 0 : 1,
           }}
           transition={{ duration: 1.6, ease: [0.22, 1, 0.36, 1] }}
         />
@@ -157,7 +162,7 @@ const VideoBackground = () => {
         <motion.div
           className="absolute inset-0"
           animate={{
-            backgroundColor: settled ? overlaySettled : overlayIntro,
+            backgroundColor: settled ? overlaySettled : showTitleBlock ? PRELOADER_BG : overlayIntro,
           }}
           transition={{ duration: 1.2, ease: 'easeInOut' }}
         />
@@ -191,13 +196,9 @@ const VideoBackground = () => {
                     : { duration: 0.6, ease: [0.22, 1, 0.36, 1] },
                 }}
               >
-                <div className="relative max-w-[min(92vw,56rem)] [filter:drop-shadow(0_3px_6px_rgba(0,0,0,1))_drop-shadow(0_8px_28px_rgba(0,0,0,0.85))]">
-                  <div
-                    className="pointer-events-none absolute -inset-x-10 -inset-y-8 rounded-[2rem] bg-black/45 blur-2xl sm:blur-3xl"
-                    aria-hidden
-                  />
+                <div className="relative max-w-[min(92vw,56rem)]">
                   <p
-                    className="relative font-display text-center font-black text-white leading-[1.06] tracking-[0.04em] sm:tracking-[0.08em] md:tracking-[0.1em] text-[clamp(1.5rem,7vw,2.25rem)] sm:text-5xl md:text-6xl lg:text-7xl px-2"
+                    className="relative font-display text-center font-black text-[#111111] leading-[1.06] tracking-[0.04em] sm:tracking-[0.08em] md:tracking-[0.1em] text-[clamp(1.5rem,7vw,2.25rem)] sm:text-5xl md:text-6xl lg:text-7xl px-2"
                     aria-live="polite"
                   >
                     {Array.from(titleText).map((char, i) => (
@@ -209,14 +210,14 @@ const VideoBackground = () => {
                           duration: 0.42,
                           ease: [0.17, 0.84, 0.44, 1],
                         }}
-                        className="inline-block text-white [will-change:transform,opacity]"
+                        className="inline-block text-[#111111] [will-change:transform,opacity]"
                       >
                         {char === ' ' ? '\u00a0' : char}
                       </motion.span>
                     ))}
                     {!typingComplete && titleText.length > 0 && (
                       <motion.span
-                        className="inline-block align-middle ml-0.5 h-[0.75em] w-[2px] sm:w-[3px] rounded-full bg-white translate-y-[-0.05em]"
+                        className="inline-block align-middle ml-0.5 h-[0.75em] w-[2px] sm:w-[3px] rounded-full bg-[#111111] translate-y-[-0.05em]"
                         aria-hidden
                         initial={{ opacity: 0 }}
                         animate={{ opacity: [1, 0.2, 1] }}

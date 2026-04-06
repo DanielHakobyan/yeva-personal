@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const Essay = require('../models/Essay');
 const auth = require('../middleware/auth');
+const admin = require('../middleware/admin');
 
 // @route   GET api/essays
 // @desc    Get all essays
@@ -32,7 +33,7 @@ router.get('/:id', async (req, res) => {
 // @route   POST api/essays
 // @desc    Create an essay
 // @access  Private
-router.post('/', auth, async (req, res) => {
+router.post('/', auth, admin, async (req, res) => {
   try {
     const newEssay = new Essay({
       title: req.body.title,
@@ -57,7 +58,7 @@ router.post('/', auth, async (req, res) => {
 // @route   PUT api/essays/:id
 // @desc    Update an essay
 // @access  Private
-router.put('/:id', auth, async (req, res) => {
+router.put('/:id', auth, admin, async (req, res) => {
   try {
     const essay = await Essay.findById(req.params.id);
     if (!essay) return res.status(404).json({ msg: 'Essay not found' });
@@ -77,7 +78,7 @@ router.put('/:id', auth, async (req, res) => {
 // @route   DELETE api/essays/:id
 // @desc    Delete an essay
 // @access  Private
-router.delete('/:id', auth, async (req, res) => {
+router.delete('/:id', auth, admin, async (req, res) => {
   try {
     const essay = await Essay.findById(req.params.id);
     if (!essay) return res.status(404).json({ msg: 'Essay not found' });

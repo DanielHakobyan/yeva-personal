@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const Project = require('../models/Project');
 const auth = require('../middleware/auth');
+const admin = require('../middleware/admin');
 
 // @route   GET api/projects
 // @desc    Get all projects
@@ -32,7 +33,7 @@ router.get('/:id', async (req, res) => {
 // @route   POST api/projects
 // @desc    Create a project
 // @access  Private
-router.post('/', auth, async (req, res) => {
+router.post('/', auth, admin, async (req, res) => {
   try {
     const newProject = new Project({
       title: req.body.title,
@@ -52,7 +53,7 @@ router.post('/', auth, async (req, res) => {
 // @route   PUT api/projects/:id
 // @desc    Update a project
 // @access  Private
-router.put('/:id', auth, async (req, res) => {
+router.put('/:id', auth, admin, async (req, res) => {
   try {
     const project = await Project.findById(req.params.id);
     if (!project) return res.status(404).json({ msg: 'Project not found' });
@@ -74,7 +75,7 @@ router.put('/:id', auth, async (req, res) => {
 // @route   DELETE api/projects/:id
 // @desc    Delete a project
 // @access  Private
-router.delete('/:id', auth, async (req, res) => {
+router.delete('/:id', auth, admin, async (req, res) => {
   try {
     const project = await Project.findById(req.params.id);
     if (!project) return res.status(404).json({ msg: 'Project not found' });

@@ -3,6 +3,7 @@ const router = express.Router();
 const multer = require('multer');
 const path = require('path');
 const auth = require('../middleware/auth');
+const admin = require('../middleware/admin');
 const fs = require('fs');
 
 const storage = multer.diskStorage({
@@ -23,7 +24,7 @@ const upload = multer({ storage: storage });
 // @route   POST api/upload
 // @desc    Upload file
 // @access  Private
-router.post('/', auth, upload.single('file'), (req, res) => {
+router.post('/', auth, admin, upload.single('file'), (req, res) => {
   try {
     if (!req.file) {
       return res.status(400).send('No file uploaded.');
