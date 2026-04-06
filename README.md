@@ -1,9 +1,6 @@
-# Cinematic Portfolio & Blog 🎬
-
-A modern, cinematic, full-stack personal portfolio and blog designed with a focus on animations, aesthetics, and smooth transitions.
 
 ## Tech Stack
-- **Frontend**: React + Vite, Tailwind CSS + Tailwind V4, Framer Motion, React Router.
+- **Frontend**: React + Vite, Tailwind CSS + Tailwind V4, Fraer Motion, React Router.
 - **Backend**: Node.js, Express.js, MongoDB (Mongoose), JWT Auth.
 
 ## Features
@@ -14,7 +11,7 @@ A modern, cinematic, full-stack personal portfolio and blog designed with a focu
 - Full Blog (Essays) with category filtering and elegant reading UI
 - Portfolio Studio showing dynamic grid
 - Admin Dashboard to manage essays and projects
-- Mobile Responsive
+- Mobile Responsiv
 
 ## Setup Instructions
 
@@ -54,4 +51,4 @@ A modern, cinematic, full-stack personal portfolio and blog designed with a focu
 
 ### 3. Demo Data & Admin Access
 The frontend is configured to show "mock data" dynamically if the backend fails or is empty, ensuring the UI can be previewed immediately without database seeding.
-- To use the admin section, you will need to register an admin via the backend API `POST http://localhost:5000/api/auth/register`, then navigate to `/login` to access the dashboard.
+- To use the admin section, you will need to register an admin via the backend API `POST http://localhost:5000/api/auth/register`, then navigate to `/login` to access the dasrd.
