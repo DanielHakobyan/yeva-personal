@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Link } from 'react-router-dom';
-import axios from 'axios';
+import { api } from '../api/client';
 
 const Categories = ['All', 'Personal', 'Philosophical', 'Political'];
 
@@ -9,25 +9,20 @@ const Essays = () => {
   const [activeCategory, setActiveCategory] = useState('All');
   const [essays, setEssays] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [fetchError, setFetchError] = useState('');
 
   useEffect(() => {
-    // In a real app, this would be an API call to get all essays
-    // Mocking for now to show structure until backend is integrated fully
-    axios.get('http://localhost:5000/api/essays')
-      .then(res => {
+    api
+      .get('/api/essays')
+      .then((res) => {
         setEssays(res.data);
-        setLoading(false);
+        setFetchError('');
       })
-      .catch(err => {
+      .catch((err) => {
         console.error(err);
-        setLoading(false);
-        // Fallback mock data
-        setEssays([
-          { _id: '1', title: 'The Architect of Reality', category: 'Philosophical', createdAt: new Date().toISOString(), content: 'Thoughts on subjective reality...' },
-          { _id: '2', title: 'Growing Up Digital', category: 'Personal', createdAt: new Date().toISOString(), content: 'My early days on the internet...' },
-          { _id: '3', title: 'The Future of Governance', category: 'Political', createdAt: new Date().toISOString(), content: 'How AI will shape policy...' },
-        ]);
-      });
+        setFetchError('Could not load essays. Is the API running?');
+      })
+      .finally(() => setLoading(false));
   }, []);
 
   const filteredEssays = activeCategory === 'All' 
@@ -74,6 +69,8 @@ const Essays = () => {
         <AnimatePresence mode="popLayout">
           {loading ? (
             <p>Loading essays...</p>
+          ) : fetchError ? (
+            <p className="text-center text-red-400/90 py-8">{fetchError}</p>
           ) : filteredEssays.map((essay, index) => (
             <motion.div
               layout
@@ -100,7 +97,7 @@ const Essays = () => {
           ))}
         </AnimatePresence>
         
-        {!loading && filteredEssays.length === 0 && (
+        {!loading && !fetchError && filteredEssays.length === 0 && (
           <motion.p 
             initial={{ opacity: 0 }} 
             animate={{ opacity: 1 }} 

@@ -2,6 +2,7 @@ import React from 'react';
 import { Routes, Route, Navigate, Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { motion } from 'framer-motion';
+import ManageEssays from './ManageEssays';
 
 const AdminOverview = () => (
   <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-8">
@@ -18,8 +19,6 @@ const AdminOverview = () => (
 
 // Placeholder components for management
 const ManageProjects = () => <div className="glass-card p-8"><h2>Projects Management (Placeholder)</h2><p className="opacity-60 mt-4">In a complete build, list projects here with Create/Edit/Delete actions.</p></div>;
-const ManageEssays = () => <div className="glass-card p-8"><h2>Essays Management (Placeholder)</h2><p className="opacity-60 mt-4">In a complete build, list essays here with Create/Edit/Delete actions and Rich Text Editor.</p></div>;
-
 const AdminDashboard = () => {
   const { user, loading, logout } = useAuth();
   const navigate = useNavigate();

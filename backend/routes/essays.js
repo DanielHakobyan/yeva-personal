@@ -43,6 +43,13 @@ router.post('/', auth, async (req, res) => {
     res.json(essay);
   } catch (err) {
     console.error(err.message);
+    if (err.name === 'ValidationError') {
+      return res.status(400).json({
+        msg: Object.values(err.errors)
+          .map((e) => e.message)
+          .join(' '),
+      });
+    }
     res.status(500).send('Server Error');
   }
 });

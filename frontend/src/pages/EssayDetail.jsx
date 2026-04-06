@@ -1,34 +1,42 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import axios from 'axios';
+import { api } from '../api/client';
 import { ArrowLeft } from 'lucide-react';
 
 const EssayDetail = () => {
   const { id } = useParams();
   const [essay, setEssay] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [notFound, setNotFound] = useState(false);
 
   useEffect(() => {
-    axios.get(`http://localhost:5000/api/essays/${id}`)
-      .then(res => {
+    setNotFound(false);
+    setEssay(null);
+    setLoading(true);
+    api
+      .get(`/api/essays/${id}`)
+      .then((res) => {
         setEssay(res.data);
-        setLoading(false);
       })
-      .catch(err => {
+      .catch((err) => {
         console.error(err);
-        setEssay({
-          title: 'The Architect of Reality',
-          category: 'Philosophical',
-          createdAt: new Date().toISOString(),
-          content: 'This is a long essay content. In a real app, this would be markdown.\n\nBut for now, it is just a placeholder paragraph to show how it looks. We can add multiple paragraphs.\n\nAnd it will flow nicely.'
-        });
-        setLoading(false);
-      });
+        setNotFound(true);
+      })
+      .finally(() => setLoading(false));
   }, [id]);
 
   if (loading) return <div className="min-h-screen flex items-center justify-center">Loading...</div>;
-  if (!essay) return <div className="min-h-screen flex items-center justify-center">Essay not found.</div>;
+  if (notFound || !essay) {
+    return (
+      <div className="max-w-3xl mx-auto px-4 sm:px-6 py-12 text-center">
+        <p className="opacity-80 mb-6">Essay not found.</p>
+        <Link to="/essays" className="text-accent hover:underline">
+          Back to Writings
+        </Link>
+      </div>
+    );
+  }
 
   return (
     <motion.div

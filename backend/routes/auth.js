@@ -6,9 +6,17 @@ const auth = require('../middleware/auth');
 const User = require('../models/User');
 
 // @route   POST api/auth/register
+// Only the first user can register (bootstrap). After that, use login only.
 router.post('/register', async (req, res) => {
   const { username, password } = req.body;
   try {
+    const userCount = await User.countDocuments();
+    if (userCount > 0) {
+      return res.status(403).json({
+        msg: 'Registration is closed. Sign in with your existing account.',
+      });
+    }
+
     let user = await User.findOne({ username });
     if (user) {
       return res.status(400).json({ msg: 'User already exists' });

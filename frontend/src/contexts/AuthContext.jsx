@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import axios from 'axios';
+import { api } from '../api/client';
 
 const AuthContext = createContext();
 
@@ -12,8 +12,8 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     const token = localStorage.getItem('token');
     if (token) {
-      axios.defaults.headers.common['x-auth-token'] = token;
-      axios.get('http://localhost:5000/api/auth/user')
+      api.defaults.headers.common['x-auth-token'] = token;
+      api.get('/api/auth/user')
         .then(res => {
           setUser(res.data);
           setLoading(false);
@@ -21,7 +21,7 @@ export const AuthProvider = ({ children }) => {
         .catch(err => {
           console.error(err);
           localStorage.removeItem('token');
-          delete axios.defaults.headers.common['x-auth-token'];
+          delete api.defaults.headers.common['x-auth-token'];
           setLoading(false);
         });
     } else {
@@ -30,15 +30,15 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
   const login = async (username, password) => {
-    const res = await axios.post('http://localhost:5000/api/auth/login', { username, password });
+    const res = await api.post('/api/auth/login', { username, password });
     localStorage.setItem('token', res.data.token);
-    axios.defaults.headers.common['x-auth-token'] = res.data.token;
+    api.defaults.headers.common['x-auth-token'] = res.data.token;
     setUser(res.data.user);
   };
 
   const logout = () => {
     localStorage.removeItem('token');
-    delete axios.defaults.headers.common['x-auth-token'];
+    delete api.defaults.headers.common['x-auth-token'];
     setUser(null);
   };
 
