@@ -8,11 +8,13 @@ import { Volume2, VolumeX } from 'lucide-react';
 const TITLE = 'Quod Tango Muto';
 const TITLE_ENTER_DELAY_MS = 280;
 const TYPE_MS = 72;
-const TITLE_HOLD_MS = 850;
+const TITLE_HOLD_MS = 1400;
 const TITLE_EXIT_MS = 0.7;
 /** Sound / skip appear after the title has fully left */
 const CONTROLS_AFTER_TITLE_MS = 220;
 const PRELOADER_BG = '#dcd2c2';
+const INTRO_SLICE_SECONDS = 7.5;
+const INTRO_PLAYBACK_RATE = 2.25;
 
 /**
  * Direct file URL (not the github.com/.../blob/... page).
@@ -100,14 +102,29 @@ const VideoBackground = () => {
     window.setTimeout(() => setControlsVisible(true), CONTROLS_AFTER_TITLE_MS);
   }, []);
 
+  const playIntroSlice = useCallback(() => {
+    const v = videoRef.current;
+    if (!v) return;
+
+    try {
+      v.playbackRate = INTRO_PLAYBACK_RATE;
+      if (Number.isFinite(v.duration) && v.duration > 0) {
+        v.currentTime = Math.max(0, v.duration - INTRO_SLICE_SECONDS);
+      }
+      v.play().catch(() => {});
+    } catch {
+      // ignore
+    }
+  }, []);
+
   /** Only the home intro should call play(); other routes keep the paused last frame. */
   useEffect(() => {
     const v = videoRef.current;
     if (!v) return;
     if (location.pathname === '/' && !settled && canPlayVideo) {
-      v.play().catch(() => {});
+      playIntroSlice();
     }
-  }, [location.pathname, settled, canPlayVideo]);
+  }, [location.pathname, settled, canPlayVideo, playIntroSlice]);
 
   const finishIntro = useCallback(() => {
     const v = videoRef.current;
@@ -138,7 +155,7 @@ const VideoBackground = () => {
   };
 
   const overlaySettled =
-    theme === 'dark' ? 'rgba(0,0,0,0.6)' : 'rgba(255,255,255,0.4)';
+    'rgba(255,255,255,0.28)';
   const overlayIntro = 'rgba(0,0,0,0.12)';
 
   return (
@@ -151,10 +168,16 @@ const VideoBackground = () => {
           muted={isMuted}
           playsInline
           preload="auto"
+          onLoadedMetadata={() => {
+            // Ensure the slice is applied even if metadata arrives after preloader.
+            if (location.pathname === '/' && !settled && canPlayVideo) {
+              playIntroSlice();
+            }
+          }}
           onEnded={handleVideoEnd}
           animate={{
-            filter: settled ? 'blur(20px)' : 'blur(0px)',
-            opacity: settled ? (theme === 'dark' ? 0.3 : 0.6) : showTitleBlock ? 0 : 1,
+            filter: settled ? 'blur(8px)' : 'blur(0px)',
+            opacity: settled ? 0.65 : showTitleBlock ? 0 : 1,
           }}
           transition={{ duration: 1.6, ease: [0.22, 1, 0.36, 1] }}
         />
@@ -174,7 +197,7 @@ const VideoBackground = () => {
             {showTitleBlock && (
               <motion.div
                 key="intro-title"
-                className="pointer-events-none absolute top-[16%] sm:top-[20%] left-0 right-0 flex justify-center px-4 sm:px-8"
+                className="pointer-events-none absolute inset-0 flex items-center justify-center px-4 sm:px-8"
                 initial={{ opacity: 0, y: 28, scale: 0.96 }}
                 animate={{
                   opacity: 1,
@@ -198,7 +221,7 @@ const VideoBackground = () => {
               >
                 <div className="relative max-w-[min(92vw,56rem)]">
                   <p
-                    className="relative font-display text-center font-black text-[#111111] leading-[1.06] tracking-[0.04em] sm:tracking-[0.08em] md:tracking-[0.1em] text-[clamp(1.5rem,7vw,2.25rem)] sm:text-5xl md:text-6xl lg:text-7xl px-2"
+                    className="relative font-typewriter text-center font-bold text-[#38382b] leading-[1.06] tracking-[0.06em] sm:tracking-[0.1em] md:tracking-[0.12em] text-[clamp(1.35rem,6vw,2.2rem)] sm:text-5xl md:text-6xl lg:text-7xl px-2"
                     aria-live="polite"
                   >
                     {Array.from(titleText).map((char, i) => (
@@ -210,14 +233,14 @@ const VideoBackground = () => {
                           duration: 0.42,
                           ease: [0.17, 0.84, 0.44, 1],
                         }}
-                        className="inline-block text-[#111111] [will-change:transform,opacity]"
+                        className="inline-block text-[#38382b] [will-change:transform,opacity]"
                       >
                         {char === ' ' ? '\u00a0' : char}
                       </motion.span>
                     ))}
                     {!typingComplete && titleText.length > 0 && (
                       <motion.span
-                        className="inline-block align-middle ml-0.5 h-[0.75em] w-[2px] sm:w-[3px] rounded-full bg-[#111111] translate-y-[-0.05em]"
+                        className="inline-block align-middle ml-0.5 h-[0.75em] w-[2px] sm:w-[3px] rounded-full bg-[#38382b] translate-y-[-0.05em]"
                         aria-hidden
                         initial={{ opacity: 0 }}
                         animate={{ opacity: [1, 0.2, 1] }}
@@ -235,30 +258,21 @@ const VideoBackground = () => {
           </AnimatePresence>
 
           <motion.div
-            className="flex flex-col items-center gap-6 sm:gap-8 pointer-events-auto mt-auto w-full max-w-md px-4 safe-pb mb-[max(2.5rem,env(safe-area-inset-bottom,0px))] sm:mb-[12vh]"
+            className="pointer-events-auto absolute left-1/2 -translate-x-1/2 bottom-[max(1.25rem,env(safe-area-inset-bottom,0px))]"
             initial={false}
             animate={{
               opacity: controlsVisible ? 1 : 0,
-              y: controlsVisible ? 0 : 16,
+              y: controlsVisible ? 0 : 10,
             }}
             transition={{ duration: 0.85, ease: [0.22, 1, 0.36, 1] }}
           >
-            {!hasInteracted && (
-              <button
-                type="button"
-                onClick={toggleMute}
-                className="touch-manipulation min-h-[48px] w-full sm:w-auto justify-center bg-white/20 backdrop-blur-md px-6 py-3.5 rounded-full flex items-center gap-2 text-white border border-white/30 hover:bg-white/30 active:scale-[0.98] transition-all font-display tracking-widest text-xs sm:text-sm uppercase"
-              >
-                {isMuted ? <VolumeX size={18} /> : <Volume2 size={18} />}
-                Tap to enable sound
-              </button>
-            )}
             <button
               type="button"
-              onClick={finishIntro}
-              className="touch-manipulation min-h-[44px] px-4 text-white/60 hover:text-white active:text-white transition-colors tracking-widest text-xs uppercase"
+              onClick={toggleMute}
+              aria-label={isMuted ? 'Enable sound' : 'Mute sound'}
+              className="touch-manipulation h-10 w-10 rounded-full flex items-center justify-center border border-white/30 bg-black/30 backdrop-blur-md text-white hover:bg-black/40 active:scale-[0.97] transition-all"
             >
-              Skip Intro
+              {isMuted ? <VolumeX size={18} /> : <Volume2 size={18} />}
             </button>
           </motion.div>
         </div>

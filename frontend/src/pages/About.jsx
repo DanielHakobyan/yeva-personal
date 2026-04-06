@@ -75,7 +75,7 @@ const About = () => {
             alt="Portrait" 
             className="w-full h-[120%] object-cover object-center origin-top"
           />
-          <div className="absolute inset-0 bg-black/10 dark:bg-white/5 mix-blend-overlay"></div>
+          <div className="absolute inset-0 bg-black/10 mix-blend-overlay"></div>
         </div>
       </div>
     </motion.div>

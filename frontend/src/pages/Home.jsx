@@ -17,7 +17,7 @@ const Home = () => {
         transition={{ delay: 0.3, duration: 0.8 }}
         className="text-sm md:text-base font-medium tracking-[0.3em] uppercase text-accent mb-6"
       >
-        A Digital Space
+        Hello, I am Yeva
       </motion.p>
       
       <motion.h1 
@@ -26,10 +26,8 @@ const Home = () => {
         transition={{ delay: 0.5, duration: 1 }}
         className="text-[clamp(1.85rem,7vw,2.6rem)] sm:text-5xl md:text-7xl lg:text-8xl font-display font-bold tracking-tight sm:tracking-tighter mb-6 sm:mb-8 leading-[1.08] sm:leading-tight break-words px-1"
       >
-        Cinematic <br />
-        <span className="text-transparent bg-clip-text bg-gradient-to-r from-gray-400 to-gray-800 dark:from-gray-300 dark:to-white">
-          Portfolio & Essays
-        </span>
+        A Personal <br />
+        <span className="opacity-80">Website</span>
       </motion.h1>
       
       <motion.p
@@ -38,7 +36,7 @@ const Home = () => {
         transition={{ delay: 0.8, duration: 1 }}
         className="max-w-xl text-base sm:text-lg md:text-xl opacity-70 mb-8 sm:mb-12 font-light px-2 leading-relaxed"
       >
-        Welcome to my mind. Explore the intersection of design, code, philosophy, and personal thought.
+        Explore my essays, thoughts, and small fragments of inspiration.
       </motion.p>
       
       <motion.div
@@ -47,12 +45,12 @@ const Home = () => {
         transition={{ delay: 1.1, duration: 0.8 }}
       >
         <Link 
-          to="/portfolio" 
-          className="inline-flex items-center justify-center min-h-[48px] min-w-[200px] sm:min-w-0 touch-manipulation relative overflow-hidden group px-8 py-3.5 sm:py-4 rounded-full border border-dark/20 dark:border-white/20 hover:border-transparent active:scale-[0.98] transition-all duration-300"
+          to="/essays" 
+          className="inline-flex items-center justify-center min-h-[48px] min-w-[200px] sm:min-w-0 touch-manipulation relative overflow-hidden group px-8 py-3.5 sm:py-4 rounded-full border border-dark/20 hover:border-transparent active:scale-[0.98] transition-all duration-300"
         >
           <span className="absolute inset-0 w-full h-full bg-accent group-hover:scale-105 transition-transform duration-500 ease-out z-0 opacity-0 group-hover:opacity-100 rounded-full" />
           <span className="relative z-10 uppercase tracking-widest text-sm font-medium group-hover:text-white transition-colors duration-300">
-            Enter Studio
+            Read Essays
           </span>
         </Link>
       </motion.div>

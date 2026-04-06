@@ -5,11 +5,7 @@ import { motion } from 'framer-motion';
 import ManageEssays from './ManageEssays';
 
 const AdminOverview = () => (
-  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-8">
-    <Link to="/admin/projects" className="glass-card p-6 sm:p-10 flex flex-col items-center justify-center min-h-[160px] sm:min-h-[200px] hover:border-accent active:opacity-90 transition-colors touch-manipulation rounded-xl sm:rounded-2xl text-center">
-      <h3 className="text-xl sm:text-2xl font-display font-bold mb-2">Manage Projects</h3>
-      <p className="opacity-60 text-sm">Add, edit or delete portfolio items</p>
-    </Link>
+  <div className="grid grid-cols-1 gap-4 sm:gap-8">
     <Link to="/admin/essays" className="glass-card p-6 sm:p-10 flex flex-col items-center justify-center min-h-[160px] sm:min-h-[200px] hover:border-accent active:opacity-90 transition-colors touch-manipulation rounded-xl sm:rounded-2xl text-center">
       <h3 className="text-xl sm:text-2xl font-display font-bold mb-2">Manage Essays</h3>
       <p className="opacity-60 text-sm">Write and publish new thoughts</p>
@@ -17,8 +13,6 @@ const AdminOverview = () => (
   </div>
 );
 
-// Placeholder components for management
-const ManageProjects = () => <div className="glass-card p-8"><h2>Projects Management (Placeholder)</h2><p className="opacity-60 mt-4">In a complete build, list projects here with Create/Edit/Delete actions.</p></div>;
 const AdminDashboard = () => {
   const { user, loading, logout } = useAuth();
   const navigate = useNavigate();
@@ -53,7 +47,6 @@ const AdminDashboard = () => {
       
       <Routes>
         <Route path="/" element={<AdminOverview />} />
-        <Route path="/projects" element={<ManageProjects />} />
         <Route path="/essays" element={<ManageEssays />} />
       </Routes>
     </motion.div>

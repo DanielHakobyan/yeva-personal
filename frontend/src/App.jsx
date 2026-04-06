@@ -5,10 +5,9 @@ import { AnimatePresence, motion } from 'framer-motion';
 import Navbar from './components/Navbar';
 import Home from './pages/Home';
 import About from './pages/About';
-import Portfolio from './pages/Portfolio';
-import ProjectsDetail from './pages/ProjectDetail';
 import Essays from './pages/Essays';
 import EssayDetail from './pages/EssayDetail';
+import Contact from './pages/Contact';
 import Login from './pages/Login';
 import AdminDashboard from './pages/AdminDashboard';
 import { ThemeProvider } from './contexts/ThemeContext';
@@ -24,10 +23,9 @@ const AnimatedRoutes = () => {
       <Routes location={location} key={location.pathname}>
         <Route path="/" element={<Home />} />
         <Route path="/about" element={<About />} />
-        <Route path="/portfolio" element={<Portfolio />} />
-        <Route path="/portfolio/:id" element={<ProjectsDetail />} />
         <Route path="/essays" element={<Essays />} />
         <Route path="/essays/:id" element={<EssayDetail />} />
+        <Route path="/contact" element={<Contact />} />
         <Route path="/login" element={<Login />} />
         <Route path="/admin/*" element={<AdminDashboard />} />
       </Routes>
@@ -39,7 +37,7 @@ function AppShell() {
   const { blockSiteChrome } = useIntro();
 
   return (
-    <div className="min-h-screen font-sans bg-light dark:bg-dark text-dark dark:text-light transition-colors duration-500 relative">
+    <div className="min-h-screen font-sans bg-light dark:bg-dark text-[#38382b] dark:text-light transition-colors duration-500 relative">
       <VideoBackground />
       <motion.div
         className="relative z-10 flex flex-col min-h-screen"

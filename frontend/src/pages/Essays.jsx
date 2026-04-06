@@ -29,6 +29,12 @@ const Essays = () => {
     ? essays 
     : essays.filter(essay => essay.category === activeCategory);
 
+  const getPreview = (content = '') => {
+    const text = String(content).replace(/\s+/g, ' ').trim();
+    if (!text) return '';
+    return text.length > 180 ? `${text.slice(0, 180)}…` : text;
+  };
+
   return (
     <motion.div
       initial={{ opacity: 0 }}
@@ -48,18 +54,18 @@ const Essays = () => {
             onClick={() => setActiveCategory(category)}
             className={`relative shrink-0 snap-start min-h-[44px] px-5 sm:px-6 py-2.5 rounded-full text-sm font-medium tracking-wide transition-colors touch-manipulation ${
               activeCategory === category 
-                ? 'text-white' 
-                : 'text-dark/60 dark:text-light/60 hover:text-dark dark:hover:text-light'
+                ? 'text-[#38382b]' 
+                : 'text-[#38382b]/70 hover:text-[#38382b]'
             }`}
           >
             {activeCategory === category && (
               <motion.div
                 layoutId="pill"
-                className="absolute inset-0 bg-dark dark:bg-light rounded-full z-0"
+                className="absolute inset-0 bg-white/60 rounded-full z-0 border border-white/40"
                 transition={{ type: "spring", stiffness: 300, damping: 30 }}
               />
             )}
-            <span className="relative z-10 mix-blend-difference">{category}</span>
+            <span className="relative z-10">{category}</span>
           </button>
         ))}
       </div>
@@ -92,6 +98,11 @@ const Essays = () => {
                 <h2 className="text-xl sm:text-2xl md:text-3xl font-display font-bold group-hover:text-accent transition-colors leading-snug break-words">
                   {essay.title}
                 </h2>
+                {essay.content && (
+                  <p className="mt-4 opacity-75 leading-relaxed line-clamp-3">
+                    {getPreview(essay.content)}
+                  </p>
+                )}
               </Link>
             </motion.div>
           ))}

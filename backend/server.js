@@ -30,7 +30,6 @@ if (!mongoUri) {
 // In dev Vite rewrites `/api/*` -> `/*` before forwarding to backend.
 app.use('/auth', require('./routes/auth'));
 app.use('/essays', require('./routes/essays'));
-app.use('/projects', require('./routes/projects'));
 app.use('/upload', require('./routes/upload'));
 
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
