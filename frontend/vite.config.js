@@ -10,6 +10,9 @@ export default defineConfig({
       '/api': {
         target: 'http://localhost:5000',
         changeOrigin: true,
+        // Our Express backend mounts routes like `/auth`, `/essays`, etc.
+        // Since frontend calls `/api/...`, strip the `/api` prefix in local dev.
+        rewrite: (path) => path.replace(/^\/api/, ''),
       },
       '/uploads': {
         target: 'http://localhost:5000',

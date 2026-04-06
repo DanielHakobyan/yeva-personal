@@ -25,9 +25,12 @@ if (!mongoUri) {
 }
 
 // Routes
-app.use('/api/auth', require('./routes/auth'));
-app.use('/api/essays', require('./routes/essays'));
-app.use('/api/projects', require('./routes/projects'));
-app.use('/api/upload', require('./routes/upload'));
+// Express routes are mounted without the `/api` prefix.
+// In production Vercel mounts this service at `/api`.
+// In dev Vite rewrites `/api/*` -> `/*` before forwarding to backend.
+app.use('/auth', require('./routes/auth'));
+app.use('/essays', require('./routes/essays'));
+app.use('/projects', require('./routes/projects'));
+app.use('/upload', require('./routes/upload'));
 
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
