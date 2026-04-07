@@ -39,8 +39,8 @@ const Navbar = () => {
     <header
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ease-in-out safe-px ${
         scrolled
-          ? 'bg-[#dcd2c2]/90 backdrop-blur-md shadow-lg pb-3 pt-[calc(0.5rem+env(safe-area-inset-top,0px))]'
-          : 'bg-[#dcd2c2]/70 backdrop-blur-sm pb-4 pt-[calc(0.75rem+env(safe-area-inset-top,0px))] sm:pb-6 sm:pt-[calc(1rem+env(safe-area-inset-top,0px))]'
+          ? 'bg-[#dcd2c2]/90 backdrop-blur-md shadow-lg pb-2 pt-[calc(0.35rem+env(safe-area-inset-top,0px))]'
+          : 'bg-[#dcd2c2]/70 backdrop-blur-sm pb-3 pt-[calc(0.55rem+env(safe-area-inset-top,0px))] sm:pb-4 sm:pt-[calc(0.75rem+env(safe-area-inset-top,0px))]'
       } text-[#38382b]`}
     >
       <div className="max-w-7xl mx-auto flex justify-between items-center gap-3 min-w-0">
@@ -89,7 +89,7 @@ const Navbar = () => {
               <img
                 src={LOGO_URL}
                 alt="YEVA"
-                className={`h-12 w-auto sm:h-14 md:h-20 lg:h-[5.25rem] max-w-[min(52vw,240px)] sm:max-w-[min(64vw,300px)] lg:max-w-[320px] object-contain object-center ${
+                className={`h-10 w-auto sm:h-12 md:h-16 lg:h-[4.25rem] max-w-[min(52vw,240px)] sm:max-w-[min(64vw,300px)] lg:max-w-[320px] object-contain object-center ${
                   ''
                 }`}
                 draggable={false}
