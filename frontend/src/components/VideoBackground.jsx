@@ -218,7 +218,7 @@ const VideoBackground = () => {
               >
                 <div className="relative max-w-[min(92vw,56rem)]">
                   <p
-                    className="relative font-typewriter text-center font-bold text-[#38382b] leading-[1.06] tracking-[0.06em] sm:tracking-[0.1em] md:tracking-[0.12em] text-[clamp(1.15rem,4.8vw,1.95rem)] sm:text-4xl md:text-5xl lg:text-6xl px-2"
+                    className="relative font-typewriter text-center font-normal text-[#38382b] leading-[1.06] tracking-[0.06em] sm:tracking-[0.1em] md:tracking-[0.12em] text-[clamp(1.15rem,4.8vw,1.95rem)] sm:text-4xl md:text-5xl lg:text-6xl px-2"
                     aria-live="polite"
                   >
                     {Array.from(titleText).map((char, i) => (
