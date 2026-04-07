@@ -1,14 +1,13 @@
 import React, { useRef, useState, useEffect, useCallback } from 'react';
 import { useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useTheme } from '../contexts/ThemeContext';
 import { useIntro } from '../contexts/IntroContext';
 import { Volume2, VolumeX } from 'lucide-react';
 
 const TITLE = 'Quod Tango Muto';
 const TITLE_ENTER_DELAY_MS = 280;
-const TYPE_MS = 72;
-const TITLE_HOLD_MS = 1400;
+const TYPE_MS = 150;
+const TITLE_HOLD_MS = 980;
 const TITLE_EXIT_MS = 0.7;
 /** Sound / skip appear after the title has fully left */
 const CONTROLS_AFTER_TITLE_MS = 220;
@@ -27,7 +26,6 @@ const BACKGROUND_VIDEO_URL =
 const VideoBackground = () => {
   const videoRef = useRef(null);
   const location = useLocation();
-  const { theme } = useTheme();
   const { setIntroComplete } = useIntro();
 
   const [isMuted, setIsMuted] = useState(true);
@@ -154,8 +152,7 @@ const VideoBackground = () => {
     }
   };
 
-  const overlaySettled =
-    'rgba(255,255,255,0.28)';
+  const overlaySettled = 'rgba(255,255,255,0.28)';
   const overlayIntro = 'rgba(0,0,0,0.12)';
 
   return (
@@ -221,17 +218,17 @@ const VideoBackground = () => {
               >
                 <div className="relative max-w-[min(92vw,56rem)]">
                   <p
-                    className="relative font-typewriter text-center font-bold text-[#38382b] leading-[1.06] tracking-[0.06em] sm:tracking-[0.1em] md:tracking-[0.12em] text-[clamp(1.35rem,6vw,2.2rem)] sm:text-5xl md:text-6xl lg:text-7xl px-2"
+                    className="relative font-typewriter text-center font-bold text-[#38382b] leading-[1.06] tracking-[0.06em] sm:tracking-[0.1em] md:tracking-[0.12em] text-[clamp(1.15rem,4.8vw,1.95rem)] sm:text-4xl md:text-5xl lg:text-6xl px-2"
                     aria-live="polite"
                   >
                     {Array.from(titleText).map((char, i) => (
                       <motion.span
                         key={i}
-                        initial={{ opacity: 0, y: 14 }}
-                        animate={{ opacity: 1, y: 0 }}
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
                         transition={{
-                          duration: 0.42,
-                          ease: [0.17, 0.84, 0.44, 1],
+                          duration: 0.2,
+                          ease: 'linear',
                         }}
                         className="inline-block text-[#38382b] [will-change:transform,opacity]"
                       >

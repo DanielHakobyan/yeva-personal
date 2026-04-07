@@ -37,7 +37,7 @@ function AppShell() {
   const { blockSiteChrome } = useIntro();
 
   return (
-    <div className="min-h-screen font-sans bg-light dark:bg-dark text-[#38382b] dark:text-light transition-colors duration-500 relative">
+    <div className="min-h-screen font-sans bg-light text-[#38382b] transition-colors duration-500 relative">
       <VideoBackground />
       <motion.div
         className="relative z-10 flex flex-col min-h-screen"
