@@ -11,19 +11,23 @@ export default defineConfig({
     react(),
     tailwindcss(),
     Sitemap({ hostname: process.env.VITE_SITE_URL || 'http://localhost:5173' }),
-    vitePrerender({
-      staticDir: path.join(__dirname, 'dist'),
-      routes: ['/', '/about', '/essays', '/contact', '/login'],
-      renderer: new vitePrerender.PuppeteerRenderer({
-        injectProperty: '__PRERENDER_INJECTED',
-        inject: { prerender: true },
-        // Avoid hanging if a render-trigger event isn't observed in headless mode.
-        // Helmet tags + mock content for prerender should be ready within this window.
-        renderAfterTime: 2500,
-        headless: true,
-        maxConcurrentRoutes: 2,
-      }),
-    }),
+    ...(process.env.VITE_PRERENDER === 'true'
+      ? [
+          vitePrerender({
+            staticDir: path.join(__dirname, 'dist'),
+            routes: ['/', '/about', '/essays', '/contact', '/login'],
+            renderer: new vitePrerender.PuppeteerRenderer({
+              injectProperty: '__PRERENDER_INJECTED',
+              inject: { prerender: true },
+              // Avoid hanging if a render-trigger event isn't observed in headless mode.
+              // Helmet tags + mock content for prerender should be ready within this window.
+              renderAfterTime: 2500,
+              headless: true,
+              maxConcurrentRoutes: 2,
+            }),
+          }),
+        ]
+      : []),
   ],
   server: {
     proxy: {
