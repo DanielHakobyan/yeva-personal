@@ -28,16 +28,33 @@ const VideoBackground = () => {
   const location = useLocation();
   const { setIntroComplete } = useIntro();
 
+  const isPrerender =
+    typeof window !== 'undefined' &&
+    window.__PRERENDER_INJECTED &&
+    window.__PRERENDER_INJECTED.prerender;
+
   const [isMuted, setIsMuted] = useState(true);
   const [hasInteracted, setHasInteracted] = useState(false);
-  const [settled, setSettled] = useState(() => location.pathname !== '/');
+  const [settled, setSettled] = useState(() => location.pathname !== '/' || isPrerender);
   const [controlsVisible, setControlsVisible] = useState(false);
   const [titleText, setTitleText] = useState('');
   const [typingComplete, setTypingComplete] = useState(false);
-  const [showTitleBlock, setShowTitleBlock] = useState(true);
+  const [showTitleBlock, setShowTitleBlock] = useState(() => !isPrerender);
   const [canPlayVideo, setCanPlayVideo] = useState(() => location.pathname !== '/');
 
   const onHomeIntro = location.pathname === '/' && !settled;
+
+  useEffect(() => {
+    if (isPrerender) {
+      // Prevent IntroContext from hiding site chrome during prerender.
+      setIntroComplete(true);
+      setShowTitleBlock(false);
+      setControlsVisible(false);
+      setCanPlayVideo(false);
+      setSettled(true);
+      videoRef.current?.pause();
+    }
+  }, [isPrerender, setIntroComplete]);
 
   useEffect(() => {
     if (location.pathname !== '/') {

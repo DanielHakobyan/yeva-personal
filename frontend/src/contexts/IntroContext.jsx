@@ -5,13 +5,18 @@ const IntroContext = createContext(null);
 
 export function IntroProvider({ children }) {
   const { pathname } = useLocation();
-  const [introComplete, setIntroComplete] = useState(() => pathname !== '/');
+  const isPrerender =
+    typeof window !== 'undefined' &&
+    window.__PRERENDER_INJECTED &&
+    window.__PRERENDER_INJECTED.prerender;
+
+  const [introComplete, setIntroComplete] = useState(() => pathname !== '/' || isPrerender);
 
   useEffect(() => {
-    if (pathname !== '/') {
+    if (pathname !== '/' || isPrerender) {
       setIntroComplete(true);
     }
-  }, [pathname]);
+  }, [pathname, isPrerender]);
 
   const blockSiteChrome = pathname === '/' && !introComplete;
 

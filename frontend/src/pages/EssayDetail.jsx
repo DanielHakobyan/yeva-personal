@@ -3,6 +3,8 @@ import { useParams, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { api } from '../api/client';
 import { ArrowLeft } from 'lucide-react';
+import Seo from '../seo/Seo';
+import { markRenderComplete } from '../seo/renderComplete';
 
 const EssayDetail = () => {
   const { id } = useParams();
@@ -26,6 +28,18 @@ const EssayDetail = () => {
       .finally(() => setLoading(false));
   }, [id]);
 
+  useEffect(() => {
+    if (!loading) {
+      window.setTimeout(() => markRenderComplete(), 0);
+    }
+  }, [loading]);
+
+  const getDescription = () => {
+    if (!essay?.content) return 'Personal essay by Yeva.';
+    const text = String(essay.content).replace(/\s+/g, ' ').trim();
+    return text.length > 170 ? `${text.slice(0, 170)}…` : text;
+  };
+
   if (loading) return <div className="min-h-screen flex items-center justify-center">Loading...</div>;
   if (notFound || !essay) {
     return (
@@ -45,6 +59,13 @@ const EssayDetail = () => {
       exit={{ opacity: 0 }}
       className="max-w-3xl mx-auto px-4 sm:px-6 py-8 sm:py-12 w-full min-w-0"
     >
+      <Seo
+        title={essay ? `${essay.title} — Yeva` : 'Essay — Yeva'}
+        description={getDescription()}
+        canonicalPath={essay ? `/essays/${id}` : `/essays/${id}`}
+        ogImageTitle={essay ? essay.title : 'Essay'}
+        ogDescription={getDescription()}
+      />
       <Link to="/essays" className="inline-flex items-center gap-2 min-h-[44px] text-sm uppercase tracking-widest opacity-60 hover:opacity-100 hover:text-accent transition-all mb-8 sm:mb-12 touch-manipulation">
         <ArrowLeft size={16} /> Back to Writings
       </Link>

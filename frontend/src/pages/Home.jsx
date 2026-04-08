@@ -1,10 +1,23 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
+import Seo from '../seo/Seo';
+import { markRenderComplete } from '../seo/renderComplete';
 
 const Home = () => {
+  useEffect(() => {
+    const t = window.setTimeout(() => markRenderComplete(), 0);
+    return () => window.clearTimeout(t);
+  }, []);
+
   return (
-    <motion.div
+    <>
+      <Seo
+        title="Yeva — Personal Website"
+        description="Hello, I'm Yeva. Explore my essays, thoughts, and personal fragments."
+        canonicalPath="/"
+      />
+      <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -20 }}
@@ -54,7 +67,8 @@ const Home = () => {
           </span>
         </Link>
       </motion.div>
-    </motion.div>
+      </motion.div>
+    </>
   );
 };
 

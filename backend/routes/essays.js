@@ -9,6 +9,7 @@ const admin = require('../middleware/admin');
 // @access  Public
 router.get('/', async (req, res) => {
   try {
+    res.set('Cache-Control', 'public, max-age=300, s-maxage=300');
     const essays = await Essay.find().sort({ createdAt: -1 });
     res.json(essays);
   } catch (err) {
@@ -20,6 +21,7 @@ router.get('/', async (req, res) => {
 // @route   GET api/essays/:id
 router.get('/:id', async (req, res) => {
   try {
+    res.set('Cache-Control', 'public, max-age=300, s-maxage=300');
     const essay = await Essay.findById(req.params.id);
     if (!essay) return res.status(404).json({ msg: 'Essay not found' });
     res.json(essay);

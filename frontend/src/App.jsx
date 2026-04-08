@@ -1,19 +1,21 @@
-import React from 'react';
+import React, { Suspense } from 'react';
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
+import { HelmetProvider } from 'react-helmet-async';
 
 import Navbar from './components/Navbar';
 import Home from './pages/Home';
 import About from './pages/About';
 import Essays from './pages/Essays';
-import EssayDetail from './pages/EssayDetail';
 import Contact from './pages/Contact';
 import Login from './pages/Login';
-import AdminDashboard from './pages/AdminDashboard';
 import { ThemeProvider } from './contexts/ThemeContext';
 import { AuthProvider } from './contexts/AuthContext';
 import VideoBackground from './components/VideoBackground';
 import { IntroProvider, useIntro } from './contexts/IntroContext';
+
+const EssayDetail = React.lazy(() => import('./pages/EssayDetail'));
+const AdminDashboard = React.lazy(() => import('./pages/AdminDashboard'));
 
 const AnimatedRoutes = () => {
   const location = useLocation();
@@ -50,7 +52,9 @@ function AppShell() {
       >
         <Navbar />
         <main className="flex-grow w-full min-w-0 pt-24 sm:pt-28 pb-10 sm:pb-14 safe-px safe-pb">
-          <AnimatedRoutes />
+          <Suspense fallback={null}>
+            <AnimatedRoutes />
+          </Suspense>
         </main>
       </motion.div>
     </div>
@@ -61,11 +65,13 @@ function App() {
   return (
     <AuthProvider>
       <ThemeProvider>
-        <Router>
-          <IntroProvider>
-            <AppShell />
-          </IntroProvider>
-        </Router>
+        <HelmetProvider>
+          <Router>
+            <IntroProvider>
+              <AppShell />
+            </IntroProvider>
+          </Router>
+        </HelmetProvider>
       </ThemeProvider>
     </AuthProvider>
   );

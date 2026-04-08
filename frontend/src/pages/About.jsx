@@ -1,9 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
+import Seo from '../seo/Seo';
+import { markRenderComplete } from '../seo/renderComplete';
 
 const About = () => {
   const { scrollY } = useScroll();
   const [parallax, setParallax] = useState(true);
+
+  useEffect(() => {
+    const t = window.setTimeout(() => markRenderComplete(), 0);
+    return () => window.clearTimeout(t);
+  }, []);
 
   useEffect(() => {
     const mq = window.matchMedia('(min-width: 1024px)');
@@ -22,13 +29,19 @@ const About = () => {
   const y2 = useTransform(scrollY, [0, 1000], parallax ? [0, -180] : [0, 0]);
 
   return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      transition={{ duration: 0.6 }}
-      className="max-w-7xl mx-auto px-4 sm:px-6 py-10 sm:py-12 lg:py-24"
-    >
+    <>
+      <Seo
+        title="About — Yeva"
+        description="A personal website by Yeva — developer and designer exploring art, logic, and essays."
+        canonicalPath="/about"
+      />
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        transition={{ duration: 0.6 }}
+        className="max-w-7xl mx-auto px-4 sm:px-6 py-10 sm:py-12 lg:py-24"
+      >
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 sm:gap-14 lg:gap-16 items-center">
         <div className="order-2 lg:order-1 min-w-0">
           <motion.div style={{ y: y1 }}>
@@ -73,12 +86,15 @@ const About = () => {
             style={{ y: y2, scale: parallax ? 1.12 : 1 }}
             src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=800&q=80" 
             alt="Portrait" 
+            loading="lazy"
+            decoding="async"
             className="w-full h-[120%] object-cover object-center origin-top"
           />
           <div className="absolute inset-0 bg-black/10 mix-blend-overlay"></div>
         </div>
       </div>
-    </motion.div>
+      </motion.div>
+    </>
   );
 };
 

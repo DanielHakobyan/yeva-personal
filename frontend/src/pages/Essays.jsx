@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { api } from '../api/client';
+import Seo from '../seo/Seo';
+import { markRenderComplete } from '../seo/renderComplete';
 
 const Categories = ['All', 'Personal', 'Philosophical', 'Political'];
 
@@ -10,6 +12,34 @@ const Essays = () => {
   const [essays, setEssays] = useState([]);
   const [loading, setLoading] = useState(true);
   const [fetchError, setFetchError] = useState('');
+  const isPrerender =
+    typeof window !== 'undefined' &&
+    window.__PRERENDER_INJECTED &&
+    window.__PRERENDER_INJECTED.prerender;
+
+  const PRERENDER_MOCK_ESSAYS = [
+    {
+      _id: 'pr-1',
+      title: 'The Architect of Reality',
+      category: 'Philosophical',
+      createdAt: new Date().toISOString(),
+      content: 'Thoughts on subjective reality, identity, and how perception shapes our world.',
+    },
+    {
+      _id: 'pr-2',
+      title: 'Growing Up Digital',
+      category: 'Personal',
+      createdAt: new Date().toISOString(),
+      content: 'My early days on the internet — curiosity, experimentation, and the shift from users to builders.',
+    },
+    {
+      _id: 'pr-3',
+      title: 'The Future of Governance',
+      category: 'Political',
+      createdAt: new Date().toISOString(),
+      content: 'How AI will shape policy, civic trust, and the tools we use to decide the future.',
+    },
+  ];
 
   useEffect(() => {
     api
@@ -20,9 +50,18 @@ const Essays = () => {
       })
       .catch((err) => {
         console.error(err);
-        setFetchError('Could not load essays. Is the API running?');
+        if (isPrerender) {
+          setEssays(PRERENDER_MOCK_ESSAYS);
+          setFetchError('');
+        } else {
+          setFetchError('Could not load essays. Is the API running?');
+        }
       })
-      .finally(() => setLoading(false));
+      .finally(() => {
+        setLoading(false);
+        // Used by `vite-plugin-prerender` to know when the route is "ready".
+        window.setTimeout(() => markRenderComplete(), 0);
+      });
   }, []);
 
   const filteredEssays = activeCategory === 'All' 
@@ -43,7 +82,14 @@ const Essays = () => {
       transition={{ duration: 0.5 }}
       className="max-w-5xl mx-auto px-4 sm:px-6 py-8 sm:py-12 w-full min-w-0"
     >
-      <h1 className="text-3xl sm:text-4xl md:text-6xl font-display font-bold mb-8 sm:mb-12 tracking-tight">Writing</h1>
+      <Seo
+        title="Essays — Yeva"
+        description="Essays, reflections, and personal fragments by Yeva."
+        canonicalPath="/essays"
+      />
+      <h1 className="text-3xl sm:text-4xl md:text-6xl font-display font-normal mb-8 sm:mb-12 tracking-tight">
+        Essays
+      </h1>
       
       {/* Category Tabs */}
       <div className="flex gap-2 sm:gap-3 mb-8 sm:mb-12 overflow-x-auto pb-2 -mx-4 px-4 sm:mx-0 sm:px-0 snap-x snap-mandatory touch-pan-x [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">

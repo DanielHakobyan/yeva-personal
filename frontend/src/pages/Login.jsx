@@ -1,7 +1,9 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { motion } from 'framer-motion';
+import Seo from '../seo/Seo';
+import { markRenderComplete } from '../seo/renderComplete';
 
 const Login = () => {
   const [username, setUsername] = useState('');
@@ -9,6 +11,11 @@ const Login = () => {
   const [error, setError] = useState('');
   const { login } = useAuth();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const t = window.setTimeout(() => markRenderComplete(), 0);
+    return () => window.clearTimeout(t);
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -27,6 +34,12 @@ const Login = () => {
         animate={{ opacity: 1, scale: 1 }}
         className="glass-card p-6 sm:p-10 w-full max-w-md rounded-xl sm:rounded-2xl"
       >
+        <Seo
+          title="Login — Yeva"
+          description="Sign in to access admin controls for essays."
+          canonicalPath="/login"
+          ogImageTitle="Login"
+        />
         <h2 className="text-2xl sm:text-3xl font-display font-bold mb-6 sm:mb-8 text-center tracking-tight">Access Control</h2>
         {error && <div className="bg-red-500/20 text-red-500 p-3 rounded-lg mb-6 text-sm text-center">{error}</div>}
         <form onSubmit={handleSubmit} className="space-y-6">
